@@ -7,7 +7,10 @@ class ProjectsController < ApplicationController
 
   def show
     @project = Project.find(params[:id])
-    @locale = @project.locale(params[:locale_id])
+
+    locale_id = params[:locale_id] || session[:locale_id]
+    session[:locale_id] = locale_id
+    @locale = @project.locale(locale_id)
 
     if stale? :etag => @project.etag
       @localizations = @project.localizations.in_locale_with_blurb(@locale)
